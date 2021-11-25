@@ -1,0 +1,60 @@
+// https://eslint.org/docs/2.0.0/user-guide/configuring
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": ["./tsconfig.json"]
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "unused-imports",
+        "sort-keys-fix",
+        "typescript-sort-keys",
+        "import"
+    ],
+    "rules": {
+        // Statements must end with semicolons (has autofix)
+        "semi": "off",
+        "@typescript-eslint/semi": ["error", "always"],
+        // Double quotes for strings (has autofix)
+        "quotes": "off",
+        "@typescript-eslint/quotes": ["error", "double"],
+        "no-duplicate-imports": "error",
+        // No useless imports (has autofix)
+        "unused-imports/no-unused-imports": "error",
+        // Forces objects to have alphabetical keys (has autofix)
+        "sort-keys-fix/sort-keys-fix": "error",
+        // Sort individual imports within a block eg { Menu, Observer } (has autofix)
+        "sort-imports": [
+            "error",
+            { "ignoreCase": true, "ignoreDeclarationSort": true }
+        ],
+        // Import grouping (has autofix)
+        "import/order": [
+            "error",
+            {
+                "alphabetize": { "order": "asc", "caseInsensitive": true },
+                "newlines-between": "never",
+                "pathGroups": [
+                    {
+                        "pattern": "@/**",
+                        "group": "internal"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": []
+            }
+        ],
+        // Use Record<T, X> instead of [key: string]:
+        "@typescript-eslint/consistent-indexed-object-style": [
+            "error",
+            "record"
+        ],
+        // Method overloads must be near eachother
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        // No useless toStrings that'll print [Object obj]
+        "@typescript-eslint/no-base-to-string": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": ["error"],
+        "@typescript-eslint/prefer-enum-initializers": "error",
+        "typescript-sort-keys/interface": "error",
+        "typescript-sort-keys/string-enum": "error"
+    }
+}
