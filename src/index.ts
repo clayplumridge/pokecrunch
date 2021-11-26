@@ -3,7 +3,7 @@ import { djikstra, isDjikstraSuccess } from "./graph";
 import { cartesian } from "./math";
 import { pathDetailsToString } from "./util";
 
-const [startMonName, endMonName] = process.argv.slice(2, 4);
+const [startMonName, endMonName] = process.argv.slice(2);
 
 if (!startMonName) {
     console.log("Start pokemon name missing - run with some args!");
