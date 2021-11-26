@@ -3,8 +3,17 @@ import { djikstra, isDjikstraSuccess } from "./graph";
 import { cartesian } from "./math";
 import { pathDetailsToString } from "./util";
 
-const startMonName = "graveler";
-const endMonName = "magikarp";
+const [startMonName, endMonName] = process.argv.slice(2, 4);
+
+if (!startMonName) {
+    console.log("Start pokemon name missing - run with some args!");
+    process.exit(1);
+}
+
+if (!endMonName) {
+    console.log("End pokemon name missing - run with some args!");
+    process.exit(1);
+}
 
 const startMon = getAvailableMons().find(
     x => x.name.toLowerCase() === startMonName.toLowerCase()
@@ -15,10 +24,10 @@ const endMon = getAvailableMons().find(
 
 if (!startMon) {
     console.log(`Unable to find pokemon data for ${startMonName}`);
-    process.exit();
+    process.exit(1);
 } else if (!endMon) {
     console.log(`Unable to find pokemon data for ${endMonName}`);
-    process.exit();
+    process.exit(1);
 }
 
 const validStartGroups = startMon.eggGroups;
