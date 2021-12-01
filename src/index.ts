@@ -2,9 +2,11 @@ import { strict as assert } from "assert";
 import { exec as execEggGroupPath } from "./exec/eggGroupPath";
 
 function run(): string {
+    // Setup
     const args = process.argv.slice(2);
     const mode = args.shift();
 
+    // Utility function for asserting that there are the right number of args for the given mode
     function assertArgLength(length: number) {
         assert.equal(
             length,
@@ -13,6 +15,7 @@ function run(): string {
         );
     }
 
+    // Switch on our actual mode
     switch (mode) {
         case "egg-path":
             assertArgLength(2);

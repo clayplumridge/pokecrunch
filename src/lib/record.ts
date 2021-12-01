@@ -1,3 +1,7 @@
+/**
+ * Converts a list of T -> Record<K, T>
+ * Where K is some derivable key of T, represented by @param keyExtractor
+ */
 export function toRecord<T, Key extends string | number | symbol>(
     items: T[],
     keyExtractor: (item: T) => Key
