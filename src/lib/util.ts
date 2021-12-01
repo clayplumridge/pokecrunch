@@ -17,7 +17,9 @@ export function pathDetailsToString(path: string[]): string {
     for (let i = 0; i < path.length - 1; i++) {
         const [from, to] = path.slice(i, i + 2);
         steps.push(
-            `${pathToString([from, to])}\n${getCrossoverMons(from, to)}`
+            `${pathToString([from, to])}\n${getCrossoverMons(from, to).join(
+                ", "
+            )}`
         );
     }
 

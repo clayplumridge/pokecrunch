@@ -1,48 +1,26 @@
-import { getAvailableMons } from "./data";
-import { djikstra, isDjikstraSuccess } from "./graph";
-import { cartesian } from "./math";
-import { pathDetailsToString } from "./util";
+import { strict as assert } from "assert";
+import { exec as execEggGroupPath } from "./exec/eggGroupPath";
 
-const [startMonName, endMonName] = process.argv.slice(2);
+function run(): string {
+    const args = process.argv.slice(2);
+    const mode = args.shift();
 
-if (!startMonName) {
-    console.log("Start pokemon name missing - run with some args!");
-    process.exit(1);
+    function assertArgLength(length: number) {
+        assert.equal(
+            length,
+            args.length,
+            `Wrong number of args for mode ${mode} - expected ${length} but got ${args.length}`
+        );
+    }
+
+    switch (mode) {
+        case "egg-path":
+            assertArgLength(2);
+            return execEggGroupPath(args[0], args[1]);
+        default:
+            return `Unable to find mode matching ${mode}`;
+    }
 }
 
-if (!endMonName) {
-    console.log("End pokemon name missing - run with some args!");
-    process.exit(1);
-}
-
-const startMon = getAvailableMons().find(
-    x => x.name.toLowerCase() === startMonName.toLowerCase()
-);
-const endMon = getAvailableMons().find(
-    x => x.name.toLowerCase() == endMonName.toLowerCase()
-);
-
-if (!startMon) {
-    console.log(`Unable to find pokemon data for ${startMonName}`);
-    process.exit(1);
-} else if (!endMon) {
-    console.log(`Unable to find pokemon data for ${endMonName}`);
-    process.exit(1);
-}
-
-const validStartGroups = startMon.eggGroups;
-const validEndGroups = endMon.eggGroups;
-
-const djikstraPaths = cartesian(validStartGroups, validEndGroups)
-    .map(([start, end]) => djikstra(start, end))
-    .filter(isDjikstraSuccess)
-    .flatMap(result => result.paths);
-
-const shortestPathLength = Math.min(...djikstraPaths.map(x => x.length));
-const shortestPaths = djikstraPaths.filter(
-    x => x.length === shortestPathLength
-);
-
-const divider = "\n----------------------------------------\n";
-const output = shortestPaths.map(pathDetailsToString).join(divider);
+const output = run();
 console.log(output);
