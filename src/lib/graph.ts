@@ -1,40 +1,43 @@
+import {
+    DjikstraFailure,
+    DjikstraResult,
+    DjikstraStatus,
+    DjikstraSuccess
+} from "./graph.types";
 import { toRecord } from "./record";
 import { minBy } from "./util";
 
-export const enum DjikstraStatus {
-    FAILURE = "failure",
-    SUCCESS = "success"
-}
-
-export interface DjikstraSuccess<T> {
-    message?: string;
-    paths: T[][];
-    status: DjikstraStatus.SUCCESS;
-}
-
-export interface DjikstraFailure {
-    message: string;
-    status: DjikstraStatus.FAILURE;
-}
-
-export type DjikstraResult<T> = DjikstraSuccess<T> | DjikstraFailure;
-
+/**
+ * Type guard for @see DjikstraSuccess
+ */
 export function isDjikstraSuccess<T>(
     result: DjikstraResult<T>
 ): result is DjikstraSuccess<T> {
     return result.status === DjikstraStatus.SUCCESS;
 }
 
+/**
+ * Type guard for @see DjikstraFailure
+ */
 export function isDjikstraFailure(
     result: DjikstraResult<unknown>
 ): result is DjikstraFailure {
     return result.status === DjikstraStatus.FAILURE;
 }
 
+/**
+ * Executes Djikstra's algorithm across a set of nodes
+ * @param from The node to begin searching from
+ * @param to The node to search for a path to
+ * @param nodes All of the nodes in the graph
+ * @param keyExtractor A way to uniquely identify nodes
+ * @param doesEdgeExist A way to identify whether an edge exists between two nodes; it's recommended to make this lookup as fast as you can
+ * @returns
+ */
 export function djikstra<T>(
     from: T,
     to: T,
-    items: T[],
+    nodes: T[],
     keyExtractor: (item: T) => string,
     doesEdgeExist: (from: T, to: T) => boolean
 ): DjikstraResult<T> {
@@ -50,8 +53,8 @@ export function djikstra<T>(
     }
 
     // Structure init
-    const lookup = toRecord(items, keyExtractor);
-    const allKeys = items.map(keyExtractor);
+    const lookup = toRecord(nodes, keyExtractor);
+    const allKeys = nodes.map(keyExtractor);
     const notYetVisited = new Set([...allKeys]);
     const dist = createKeyRecord(allKeys, Infinity);
     const prevs = createKeyRecord<string[] | undefined>(allKeys, undefined);
@@ -59,7 +62,7 @@ export function djikstra<T>(
 
     // Utility functions
     function getNeighbors(node: T): T[] {
-        return items.filter(x => doesEdgeExist(node, x));
+        return nodes.filter(x => doesEdgeExist(node, x));
     }
 
     // Execute djikstras
